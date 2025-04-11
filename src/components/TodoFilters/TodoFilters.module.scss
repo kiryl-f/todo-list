@@ -1,0 +1,31 @@
+.filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  button {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+
+  .inactive {
+    color: black;
+  }
