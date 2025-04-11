@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState } from 'react';
 import { Todo } from '../types/todo';
 import { Priority } from '../types/priority';
 import { Filter, SortBy } from '../types/filter';
@@ -10,7 +10,7 @@ export const useTodos = () => {
   const [filter, setFilter] = useState<Filter>('all');
   const [sortBy, setSortBy] = useState<SortBy>('date');
 
-  const addTodo = useCallback((text: string, priority: Priority) => {
+  const addTodo = (text: string, priority: Priority) => {
     if (!text.trim()) return;
     setTodos(prev => [
       ...prev,
@@ -22,40 +22,37 @@ export const useTodos = () => {
         createdAt: Date.now(),
       },
     ]);
-  }, []);
+  };
 
-  const toggleTodo = useCallback((id: string) => {
+  const toggleTodo = (id: string) => {
     setTodos(prev =>
       prev.map(todo =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
-  }, []);
+  };
 
-  const deleteTodo = useCallback((id: string) => {
+  const deleteTodo = (id: string) => {
     setTodos(prev => prev.filter(todo => todo.id !== id));
-  }, []);
+  };
 
-  const updateText = useCallback((id: string, newText: string) => {
+  const updateText = (id: string, newText: string) => {
     setTodos(prev =>
       prev.map(todo =>
         todo.id === id ? { ...todo, text: newText } : todo
       )
     );
-  }, []);
+  };
 
-  const filteredTodos = useMemo(() => {
-    return todos.filter(todo => {
-      if (filter === 'active') return !todo.completed;
-      if (filter === 'completed') return todo.completed;
-      return true;
-    });
-  }, [todos, filter]);
+  const filteredTodos = todos.filter(todo => {
+    if (filter === 'active') return !todo.completed;
+    if (filter === 'completed') return todo.completed;
+    return true;
+  });
 
-  const sortedTodos = useMemo(() => {
-    const sorted = [...filteredTodos];
+  const sortedTodos = [...filteredTodos].sort((a, b) => {
     if (sortBy === 'date') {
-      return sorted.sort((a, b) => b.createdAt - a.createdAt);
+      return b.createdAt - a.createdAt;
     }
     if (sortBy === 'priority') {
       const priorityOrder = {
@@ -63,10 +60,10 @@ export const useTodos = () => {
         [Priority.Medium]: 2,
         [Priority.Low]: 1,
       };
-      return sorted.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
+      return priorityOrder[b.priority] - priorityOrder[a.priority];
     }
-    return sorted;
-  }, [filteredTodos, sortBy]);
+    return 0;
+  });
 
   return {
     todos: sortedTodos,
